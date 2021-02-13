@@ -48,7 +48,7 @@ Switching to the address `0x3fd361d00A6fB6D1f72f6EE4f97Ac90b90A857C4` you should
 
 **Registering a new airline**: The first 4 airlines can register a new airline right away. If this threshold is reached, a multiparty consensus scheme is applied, which needs the majority of the registered (and funded) airlines to agree on the new airline.
 
-**Registering a flight**: To register a flight, simply provide the timestamp (any number will work so far) and a flight name: Rember/copy this to act as passenger on the flight. One could show a list of registered flights later on by keeping track of these in the smart contract, **though, do not misuse the blockchain as a general purpose database!**
+**Registering a flight**: To register a flight, simply provide the timestamp (any number will work so far) and a flight name. Remember/copy this to act as passenger on the flight. One could show a list of registered flights later on by keeping track of these in the smart contract, **though, do not misuse the blockchain as a general purpose database!**
 
 ### Passenger
 
