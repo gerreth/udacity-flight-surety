@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 
 import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
 
 import BoxTile from '../../components/cell/BoxTile';
 
@@ -57,6 +58,11 @@ export const Form: React.FC<IForm> = ({
 }) => {
   return (
     <BoxTile>
+      <Typography>
+        Enter the flight details to buy an insurance, submit an oracle request and get the current
+        flight status
+      </Typography>
+      <Box my={3} />
       <TextField
         fullWidth
         label="Airline address"

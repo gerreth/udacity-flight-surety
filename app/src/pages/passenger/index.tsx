@@ -63,6 +63,11 @@ export const BuyInsurance: React.FC<IBuyInsurance> = ({account}) => {
 
   return (
     <BoxTile>
+      <Typography>
+        When the flight is late due to the airline's fault, you receive 1.5x your insurance amount.
+        You can submit at most 1 Ether.
+      </Typography>
+      <Box my={3} />
       <TextField
         error={error}
         helperText={error ? 'Could not buy an insurance' : ''}
@@ -84,7 +89,13 @@ export const BuyInsurance: React.FC<IBuyInsurance> = ({account}) => {
         variant="contained"
         disableElevation
         color="primary"
-        disabled={parseFloat(amount || '0') <= 0 || parseFloat(amount) > 1}
+        disabled={
+          parseFloat(amount || '0') <= 0 ||
+          parseFloat(amount) > 1 ||
+          !airline ||
+          !flight ||
+          !timestamp
+        }
         onClick={async () => {
           try {
             await buyInsurance(airline, flight, parseInt(timestamp, 10), {
@@ -110,6 +121,7 @@ interface IFetchFlightStatus {
 export const FetchFlightStatus: React.FC<IFetchFlightStatus> = ({account}) => {
   const {contract} = useContractContext();
   const {airline, flight, timestamp} = useContext(FlightContext);
+  const disabled = !airline || !flight || !timestamp;
 
   const fetchFlightStatus = contract?.fetchFlightStatus;
 
@@ -120,6 +132,7 @@ export const FetchFlightStatus: React.FC<IFetchFlightStatus> = ({account}) => {
   return (
     <BoxTile>
       <Button
+        disabled={disabled}
         variant="contained"
         disableElevation
         color="primary"
@@ -148,6 +161,7 @@ export const GetFlightStatus: React.FC<IGetFlightStatus> = ({account}) => {
   const {airline, flight, timestamp} = useContext(FlightContext);
 
   const [status, setStatus] = useState<number | undefined>(undefined);
+  const disabled = !airline || !flight || !timestamp;
 
   const getFlight = contract?.getFlight;
 
@@ -162,6 +176,7 @@ export const GetFlightStatus: React.FC<IGetFlightStatus> = ({account}) => {
   return (
     <BoxTile>
       <Button
+        disabled={disabled}
         variant="contained"
         disableElevation
         color="primary"
