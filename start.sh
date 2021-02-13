@@ -1,0 +1,1 @@
+ganache-cli -m "bracket weird mind uncle truth hawk picture portion cereal acid crater add" -p 8777 -a 30 -i 1342 
