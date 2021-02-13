@@ -1,20 +1,18 @@
 import React, {useEffect, useState} from 'react';
 
 import {StylesProvider, ThemeProvider, createMuiTheme} from '@material-ui/core/styles';
-import styled, {ThemeProvider as SCThemeProvider} from 'styled-components';
+import {ThemeProvider as SCThemeProvider} from 'styled-components';
 
-import {Theme} from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
-import Chip from '@material-ui/core/Chip';
 import DoneIcon from '@material-ui/icons/Done';
 
 import useWeb3Context, {Web3ContextProvider} from './providers/Web3Context';
 import {DataContractContextProvider} from './providers/DataContractContext';
 import useContractontext, {ContractContextProvider} from './providers/ContractContext';
+import {WarningChip, ErrorChip, SucccessChip} from './components/atoms/Chip';
 
 import {AirlineView} from './pages/airline';
 import {AuthorizeContract} from './pages/owner';
-
 import {PassengerView} from './pages/passenger';
 
 import './App.css';
@@ -135,33 +133,3 @@ const Home: React.FC = () => {
     );
   }
 };
-const StyledChip = styled(Chip)`
-  ${(props: {theme: Theme}) => `
-  color: #fff;
-  font-size: 0.7em;
-  font-weight: 600;
-    
-    .MuiSvgIcon-root {
-      color: #fff;
-
-    }
-  `}
-`;
-
-const ErrorChip = styled(StyledChip)`
-  ${(props: {theme: Theme}) => `
-    background: ${props.theme.palette.error.main};
-  `}
-`;
-
-const WarningChip = styled(StyledChip)`
-  ${(props: {theme: Theme}) => `
-    background: ${props.theme.palette.warning.main};
-  `}
-`;
-
-const SucccessChip = styled(StyledChip)`
-  ${(props: {theme: Theme}) => `
-    background: ${props.theme.palette.success.main};
-  `}
-`;

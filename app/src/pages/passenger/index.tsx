@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
@@ -11,6 +11,8 @@ import useContractContext from '../../providers/ContractContext';
 import useDataContractContext from '../../providers/DataContractContext';
 import useWeb3Context from '../../providers/Web3Context';
 import {IAddress} from '../../providers/DataContractContextReducer';
+
+import FlightContextProvider, {FlightContext} from './context';
 
 interface IPassengerView {
   account: string;
@@ -28,9 +30,11 @@ export const PassengerView: React.FC<IPassengerView> = ({account}) => {
         <Box px={2} />
         <Chip size="small" label={getAddress(account)} />
       </Box>
-      <BuyInsurance account={account} />
-      <FetchFlightStatus account={account} />
-      <GetFlightStatus account={account} />
+      <FlightContextProvider>
+        <BuyInsurance account={account} />
+        <FetchFlightStatus account={account} />
+        <GetFlightStatus account={account} />
+      </FlightContextProvider>
     </Box>
   );
 };
@@ -42,9 +46,7 @@ interface IBuyInsurance {
 export const BuyInsurance: React.FC<IBuyInsurance> = ({account}) => {
   const {contract} = useContractContext();
   const {web3} = useWeb3Context();
-  const [airline, setAirline] = useState('');
-  const [flight, setFlight] = useState('');
-  const [timestamp, setTimestamp] = useState('');
+  const {airline, flight, timestamp} = useContext(FlightContext);
   const [amount, setAmount] = useState('');
 
   const buyInsurance = contract?.buyInsurance;
@@ -55,36 +57,6 @@ export const BuyInsurance: React.FC<IBuyInsurance> = ({account}) => {
 
   return (
     <BoxTile>
-      <TextField
-        fullWidth
-        label="Airline address"
-        value={airline}
-        onChange={(event) => {
-          setAirline(event.target.value);
-        }}
-        size="small"
-      />
-      <Box my={3} />
-      <TextField
-        fullWidth
-        label="Timestamp"
-        value={timestamp}
-        onChange={(event) => {
-          setTimestamp(event.target.value);
-        }}
-        size="small"
-      />
-      <Box my={3} />
-      <TextField
-        fullWidth
-        label="Flight name"
-        value={flight}
-        onChange={(event) => {
-          setFlight(event.target.value);
-        }}
-        size="small"
-      />
-      <Box my={3} />
       <TextField
         fullWidth
         label="Amount"
@@ -124,9 +96,7 @@ interface IFetchFlightStatus {
 
 export const FetchFlightStatus: React.FC<IFetchFlightStatus> = ({account}) => {
   const {contract} = useContractContext();
-  const [airline, setAirline] = useState('');
-  const [flight, setFlight] = useState('');
-  const [timestamp, setTimestamp] = useState('');
+  const {airline, flight, timestamp} = useContext(FlightContext);
 
   const fetchFlightStatus = contract?.fetchFlightStatus;
 
@@ -136,36 +106,6 @@ export const FetchFlightStatus: React.FC<IFetchFlightStatus> = ({account}) => {
 
   return (
     <BoxTile>
-      <TextField
-        fullWidth
-        label="Airline address"
-        value={airline}
-        onChange={(event) => {
-          setAirline(event.target.value);
-        }}
-        size="small"
-      />
-      <Box my={3} />
-      <TextField
-        fullWidth
-        label="Timestamp"
-        value={timestamp}
-        onChange={(event) => {
-          setTimestamp(event.target.value);
-        }}
-        size="small"
-      />
-      <Box my={3} />
-      <TextField
-        fullWidth
-        label="Flight name"
-        value={flight}
-        onChange={(event) => {
-          setFlight(event.target.value);
-        }}
-        size="small"
-      />
-      <Box my={3} />
       <Button
         variant="contained"
         disableElevation
@@ -192,9 +132,7 @@ interface IGetFlightStatus {
 
 export const GetFlightStatus: React.FC<IGetFlightStatus> = ({account}) => {
   const {contract} = useDataContractContext();
-  const [airline, setAirline] = useState('');
-  const [flight, setFlight] = useState('');
-  const [timestamp, setTimestamp] = useState('');
+  const {airline, flight, timestamp} = useContext(FlightContext);
 
   const [status, setStatus] = useState<number | undefined>(undefined);
 
@@ -210,36 +148,6 @@ export const GetFlightStatus: React.FC<IGetFlightStatus> = ({account}) => {
 
   return (
     <BoxTile>
-      <TextField
-        fullWidth
-        label="Airline address"
-        value={airline}
-        onChange={(event) => {
-          setAirline(event.target.value);
-        }}
-        size="small"
-      />
-      <Box my={3} />
-      <TextField
-        fullWidth
-        label="Timestamp"
-        value={timestamp}
-        onChange={(event) => {
-          setTimestamp(event.target.value);
-        }}
-        size="small"
-      />
-      <Box my={3} />
-      <TextField
-        fullWidth
-        label="Flight name"
-        value={flight}
-        onChange={(event) => {
-          setFlight(event.target.value);
-        }}
-        size="small"
-      />
-      <Box my={3} />
       <Button
         variant="contained"
         disableElevation
@@ -249,6 +157,8 @@ export const GetFlightStatus: React.FC<IGetFlightStatus> = ({account}) => {
             const result = await getFlight(airline, flight, parseInt(timestamp, 10), {
               from: account,
             });
+
+            console.log({result});
 
             setStatus(parseInt(result.toString(), 10));
           } catch (error) {

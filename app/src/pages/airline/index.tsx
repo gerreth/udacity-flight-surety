@@ -5,6 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 import BoxTile from '../../components/cell/BoxTile';
 import useWeb3Context from '../../providers/Web3Context';
@@ -105,6 +106,7 @@ export const AirlineInfos: React.FC<IAirlineInfos> = ({account}) => {
       <Box display="flex" alignItems="center">
         <Box mr={1}>{airline.isFunded ? 'Is funded:' : 'Not Funded:'}</Box>
         <Chip size="small" color="primary" label={`${web3?.utils.fromWei(airline.funds)}/10`} />
+        <Box ml={1}>Ether provided</Box>
       </Box>
     </Box>
   );
@@ -245,9 +247,13 @@ export const FundAirline: React.FC<IFundAirline> = ({account}) => {
       <TextField
         label="Amount"
         fullWidth
+        type="number"
         value={amount}
         onChange={(event) => {
           setAmount(event.target.value);
+        }}
+        InputProps={{
+          endAdornment: <InputAdornment position="end">Ether</InputAdornment>,
         }}
         size="small"
       />
