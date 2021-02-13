@@ -5,7 +5,6 @@ const FlightSuretyDataAuthorization = artifacts.require('FlightSuretyDataAuthori
 const fs = require('fs');
 
 module.exports = async function (deployer, network, accounts) {
-  console.log({network, accounts});
   const firstAirline = '0x3fd361d00A6fB6D1f72f6EE4f97Ac90b90A857C4';
   const firstAirlineName = 'Lufthansa';
 

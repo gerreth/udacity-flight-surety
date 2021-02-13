@@ -36,7 +36,7 @@ function App() {
             <DataContractContextProvider>
               <ContractContextProvider>
                 <div className="App">
-                  <Test />
+                  <Home />
                 </div>
               </ContractContextProvider>
             </DataContractContextProvider>
@@ -67,7 +67,7 @@ const passengerAdresses = [
   // or any other
 ];
 
-const Test: React.FC = () => {
+const Home: React.FC = () => {
   const {account, loading} = useWeb3Context();
 
   const [isOperational, setIsOperational] = useState(false);
