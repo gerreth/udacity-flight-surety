@@ -19,10 +19,6 @@ import './App.css';
 
 const theme = createMuiTheme({
   spacing: 8,
-  palette: {
-    // primary: '',
-    // secondary: green
-  },
 });
 
 function App() {
@@ -67,7 +63,6 @@ const passengerAdresses = [
 
 const Home: React.FC = () => {
   const {account, loading} = useWeb3Context();
-
   const [isOperational, setIsOperational] = useState(false);
   const {status, contract} = useContractontext();
 
@@ -83,53 +78,31 @@ const Home: React.FC = () => {
     }
   }, [status, contract]);
 
+  let chip;
+  let content;
+
   if (loading) {
-    return (
-      <Box p={2}>
-        <WarningChip size="small" label="Loading" />
-      </Box>
-    );
-  }
-
-  if (!account) {
-    return (
-      <Box p={2}>
-        <ErrorChip size="small" label="Error: Could not get account" />
-      </Box>
-    );
-  }
-
-  if (!isOperational) {
-    return (
-      <Box p={2}>
-        <ErrorChip size="small" label="Status: Not operational" />
-      </Box>
-    );
-  }
-
-  if (account === ownerAddress) {
-    return (
-      <Box p={2}>
-        <SucccessChip size="small" avatar={<DoneIcon />} label="Operational" />
-        <Box py={2} />
-        <AuthorizeContract account={account} />
-      </Box>
-    );
-  } else if (airlineAdresses.includes(account)) {
-    return (
-      <Box p={2}>
-        <SucccessChip size="small" avatar={<DoneIcon />} label="Operational" />
-        <Box py={2} />
-        <AirlineView account={account} />
-      </Box>
-    );
+    chip = <WarningChip size="small" label="Loading" />;
+  } else if (!account) {
+    chip = <ErrorChip size="small" label="Could not get account" />;
+  } else if (!isOperational) {
+    chip = <ErrorChip size="small" label="Contract not operational" />;
   } else {
-    return (
-      <Box p={2}>
-        <SucccessChip size="small" avatar={<DoneIcon />} label="Operational" />
-        <Box py={2} />
-        <PassengerView account={account} />
-      </Box>
-    );
+    chip = <SucccessChip size="small" avatar={<DoneIcon />} label="Operational" />;
+    if (account === ownerAddress) {
+      content = <AuthorizeContract account={account} />;
+    } else if (airlineAdresses.includes(account)) {
+      content = <AirlineView account={account} />;
+    } else {
+      content = <PassengerView account={account} />;
+    }
   }
+
+  return (
+    <Box p={2}>
+      {chip}
+      <Box py={2} />
+      {content}
+    </Box>
+  );
 };
