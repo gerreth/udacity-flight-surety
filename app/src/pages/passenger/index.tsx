@@ -5,6 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 import BoxTile from '../../components/cell/BoxTile';
 import useContractContext from '../../providers/ContractContext';
@@ -48,6 +49,11 @@ export const BuyInsurance: React.FC<IBuyInsurance> = ({account}) => {
   const {web3} = useWeb3Context();
   const {airline, flight, timestamp} = useContext(FlightContext);
   const [amount, setAmount] = useState('');
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    setError(false);
+  }, [airline, flight, timestamp]);
 
   const buyInsurance = contract?.buyInsurance;
 
@@ -58,12 +64,18 @@ export const BuyInsurance: React.FC<IBuyInsurance> = ({account}) => {
   return (
     <BoxTile>
       <TextField
+        error={error}
+        helperText={error ? 'Could not buy an insurance' : ''}
         fullWidth
         label="Amount"
         type="number"
         value={amount}
+        InputProps={{
+          endAdornment: <InputAdornment position="end">Ether</InputAdornment>,
+        }}
         onChange={(event) => {
           setAmount(event.target.value);
+          setError(false);
         }}
         size="small"
       />
@@ -81,6 +93,7 @@ export const BuyInsurance: React.FC<IBuyInsurance> = ({account}) => {
             });
           } catch (error) {
             console.log({error});
+            setError(true);
           }
         }}
       >
@@ -180,6 +193,7 @@ interface IStatusUpdate {
 
 export const StatusUpdate: React.FC<IStatusUpdate> = ({account, reset, status}) => {
   const {contract} = useDataContractContext();
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const run = async () => {
@@ -202,11 +216,24 @@ export const StatusUpdate: React.FC<IStatusUpdate> = ({account, reset, status}) 
 
   return (
     <BoxTile>
-      <Typography>
-        {statuses[status ?? 0]} ({status})
-      </Typography>
+      {!error && (
+        <Typography>
+          {statuses[status ?? 0]} ({status})
+        </Typography>
+      )}
+      {error && (
+        <Typography color="error">No funds to transfer. Did you withdraw already?</Typography>
+      )}
       <Box display="flex" justifyContent="space-between" mt={3}>
-        <Button variant="contained" disableElevation color="secondary" onClick={reset}>
+        <Button
+          variant="contained"
+          disableElevation
+          color="secondary"
+          onClick={() => {
+            setError(false);
+            reset();
+          }}
+        >
           Reset
         </Button>
         <Button
@@ -215,9 +242,14 @@ export const StatusUpdate: React.FC<IStatusUpdate> = ({account, reset, status}) 
           disableElevation
           color="primary"
           onClick={async () => {
-            const result = await contract?.pay({from: account});
+            try {
+              const result = await contract?.pay({from: account});
 
-            console.log({result});
+              console.log({result});
+            } catch (error) {
+              console.log({error});
+              setError(true);
+            }
           }}
         >
           Payout
