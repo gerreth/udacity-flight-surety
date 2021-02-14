@@ -62,7 +62,7 @@ const passengerAdresses = [
 ];
 
 const Home: React.FC = () => {
-  const {account, loading} = useWeb3Context();
+  const {account, loading, error} = useWeb3Context();
   const [isOperational, setIsOperational] = useState(false);
   const {status, contract} = useContractontext();
 
@@ -83,10 +83,12 @@ const Home: React.FC = () => {
 
   if (loading) {
     chip = <WarningChip size="small" label="Loading" />;
+  } else if (error) {
+    chip = <ErrorChip size="small" label={error} />;
   } else if (!account) {
-    chip = <ErrorChip size="small" label="Could not get account" />;
+    chip = <ErrorChip size="small" label="Could not get account." />;
   } else if (!isOperational) {
-    chip = <ErrorChip size="small" label="Contract not operational" />;
+    chip = <ErrorChip size="small" label="Contract not operational." />;
   } else {
     chip = <SucccessChip size="small" avatar={<DoneIcon />} label="Operational" />;
     if (account === ownerAddress) {

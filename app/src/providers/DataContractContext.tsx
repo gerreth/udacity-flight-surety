@@ -18,6 +18,7 @@ export const DataContractContextProvider: React.FC = ({children}) => {
       dispatch({type: 'GET_CONTRACT'});
       const contract = Contract(abi, config.localhost.appAddress);
       const provider = await getProvider();
+
       contract.setProvider(provider);
       const instance = (await contract.deployed()) as IFlightSuretyData;
       dispatch({type: 'SET_CONTRACT', payload: instance});

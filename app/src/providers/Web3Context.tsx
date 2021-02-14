@@ -2,10 +2,11 @@ import React, {useContext, useEffect} from 'react';
 
 import Web3 from 'web3';
 
-import useWeb3Hook from '../hooks/useWeb3';
+import useWeb3Hook, {INIT} from '../hooks/useWeb3';
 
 interface IWeb3Context {
   account?: string;
+  error?: string;
   connected: boolean;
   loading: boolean;
   web3?: Web3;
@@ -14,13 +15,15 @@ interface IWeb3Context {
 const Web3Context = React.createContext<IWeb3Context | undefined>(undefined);
 
 export const Web3ContextProvider: React.FC = ({children}) => {
-  const {state, getAccount} = useWeb3Hook();
+  const {state, dispatch, getAccount} = useWeb3Hook();
 
   useEffect(() => {
-    const run = async () => {
+    const run = () => {
       if (!state.web3) {
         return;
       }
+
+      dispatch({type: INIT});
 
       getAccount(state.web3);
     };
@@ -28,7 +31,7 @@ export const Web3ContextProvider: React.FC = ({children}) => {
     if (window.ethereum) {
       window.ethereum.on('accountsChanged', run);
     }
-  }, [state.web3, getAccount]);
+  }, [state.web3, dispatch, getAccount]);
 
   return <Web3Context.Provider value={state}>{children}</Web3Context.Provider>;
 };
